@@ -63,7 +63,7 @@ class ListADT {
     }
 
     /**
-     * List ADT iterator operator. Creates a hermetically sealed iterator using a closure and a function subclass.
+     * List ADT iterator operator.
      */
     iter() {
         let _iter = null;

@@ -22,6 +22,26 @@ class QueueADT {
         this.store = this.store.slice(0, this.length - 1);
         return out;
     }
+
+    front() {
+        if (this.length === 0) {
+            throw SyntaxError("Cannot peek at a zero-length queue.")
+        } else {
+            return this.store[0];
+        }
+    }
+
+    back() {
+        if (this.length === 0) {
+            throw SyntaxError("Cannot peek at a zero-length queue.")
+        } else {
+            return this.store[this.length - 1];
+        }
+    }
+
+    empty() {
+        return (this.length === 0);
+    }
 }
 
 module.exports = {

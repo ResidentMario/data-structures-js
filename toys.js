@@ -1,5 +1,5 @@
 const StackADT = require('./stack').StackADT;
-
+const QueueADT = require('./queue').QueueADT;
 
 /**
  * Stack-backed base conversion algorithm. Only works for bases 1 through 10.
@@ -37,7 +37,39 @@ function palindrome(s) {
 }
 
 
+// Fiddling with closures.
+function square_dance() {
+    let out = null;
+    (() => {
+        class Square {
+            constructor() { [this.w_q, this.m_q] = [new QueueADT(), new QueueADT()]; }
+
+            enqueue(name, gender) {
+                (gender === 'm') ? this.m_q.enqueue(name) : this.w_q.enqueue(name);
+            }
+
+            /**
+             * Attempts to iterate through and return the freshest pair amongst those currently waiting. Throws an
+             * error if there isn't currently a pair waiting.
+             * @returns {*[]} - A two-item list whose first element is the next woman and second element the next man.
+             */
+            next() {
+                if (this.w_q.empty() || this.m_q.empty()) {
+                    throw Error("No dance pairs currently available. Please try again later.");
+                } else {
+                    return [this.w_q.dequeue(), this.m_q.dequeue()];
+                }
+            }
+        }
+
+        out = new Square();
+    })();
+    return out;
+}
+
+
 module.exports = {
     convert_base: convert_base,
-    palindrome: palindrome
+    palindrome: palindrome,
+    square_dance: square_dance
 };
