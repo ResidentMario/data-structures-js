@@ -2,6 +2,7 @@ const convert_base = require('../toys').convert_base;
 const palindrome = require("../toys").palindrome;
 const square_dance = require("../toys").square_dance;
 const radix_sort = require("../toys").radix_sort;
+const priority_queue = require('../toys').priority_queue;
 const assert = require('assert');
 
 
@@ -82,5 +83,47 @@ describe("radix_sort", () => {
         assert.equal(q.dequeue(), 5);
         assert.equal(q.dequeue(), 10);
         assert.equal(q.dequeue(), 25, 105);
+    });
+});
+
+
+describe("priority_queue", () => {
+    it("fails in the trivial zero-object case", () => {
+        let q = priority_queue();
+        assert.throws(() => q.dequeue(), Error)
+    });
+
+    it("works in the trivial one-object case", () => {
+        let q = priority_queue();
+        q.enqueue('foo', 1);
+        assert.equal(q.dequeue(), 'foo');
+    });
+
+    it("correctly prioritizes objects on dequeue", () => {
+        let q = priority_queue();
+        q.enqueue('foo', 1);
+        q.enqueue('bar', 2);
+        assert.equal(q.dequeue(), 'bar');
+        assert.equal(q.dequeue(), 'foo');
+    });
+
+    it("correctly prioritizes objects on dequeue after cleaning out", () => {
+        let q = priority_queue();
+        q.enqueue('foo', 1);
+        q.enqueue('bar', 2);
+        assert.equal(q.dequeue(), 'bar');
+        assert.equal(q.dequeue(), 'foo');
+        q.enqueue('baz', 0);
+        q.enqueue('mob', 3);
+        assert.equal(q.dequeue(), 'mob');
+        assert.equal(q.dequeue(), 'baz');
+    });
+
+    it("correctly prioritizes objects with the same priority", () => {
+        let q = priority_queue();
+        q.enqueue('foo', 1);
+        q.enqueue('bar', 1);
+        assert.equal(q.dequeue(), 'foo');
+        assert.equal(q.dequeue(), 'bar');
     });
 });

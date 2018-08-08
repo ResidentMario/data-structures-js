@@ -116,9 +116,47 @@ function radix_sort(...values) {
 }
 
 
+function priority_queue() {
+    let out = null;
+    (() => {
+        let priority_map = {};
+        let q = new QueueADT();
+
+        function enqueue(v, p) {
+            if (priority_map.hasOwnProperty(p)) {
+                priority_map[p].enqueue(v);
+            } else {
+                let subq = new QueueADT(); subq.enqueue(v);
+                priority_map[p] = subq;
+            }
+        }
+
+        function dequeue() {
+            if (Object.keys(priority_map).length === 0) {
+                throw Error("Cannot dequeue from an empty priority queue.")
+            }
+
+            let ks = Object.keys(priority_map);
+            let highest_priority_queue_key = ks[ks.length - 1];
+            let highest_priority_queue = priority_map[highest_priority_queue_key];
+            let out = highest_priority_queue.dequeue();
+            if (highest_priority_queue.empty()) {
+                delete priority_map[highest_priority_queue_key];
+            }
+            return out;
+        }
+
+        out = {enqueue: enqueue, dequeue: dequeue}
+    })();
+
+    return out;
+}
+
+
 module.exports = {
     convert_base: convert_base,
     palindrome: palindrome,
     square_dance: square_dance,
-    radix_sort: radix_sort
+    radix_sort: radix_sort,
+    priority_queue: priority_queue
 };
