@@ -21,6 +21,14 @@ describe("QueueADT", () => {
             let q = new QueueADT();
             assert.throws(() => q.dequeue(), SyntaxError);
         });
+
+        it("should work as many times as there are items in the list", () => {
+            let q = new QueueADT();
+            q.enqueue(2);
+            q.enqueue(3);
+            assert.equal(q.dequeue(), 2);
+            assert.equal(q.dequeue(), 3);
+        });
     });
 
     describe("front", () => {

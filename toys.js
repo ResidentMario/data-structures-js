@@ -22,7 +22,7 @@ function convert_base(n, b) {
 
 
 /**
- * Determineds whether or not the given string is a palindrome.
+ * Determines whether or not the given string is a palindrome.
  * @param s The input string.
  * @returns {boolean}
  */
@@ -37,39 +37,88 @@ function palindrome(s) {
 }
 
 
-// Fiddling with closures.
+/**
+ * Square dance algorithm. Allows you to take individuals, classified as male or female, and enqueue them; then later
+ * request the next pair square off. Uses a closure to make the queue objects a private field. From page 66 of the book.
+ * @returns {*}
+ */
 function square_dance() {
     let out = null;
     (() => {
-        class Square {
-            constructor() { [this.w_q, this.m_q] = [new QueueADT(), new QueueADT()]; }
+        // The queue is invisible to the user.
+        let [w_q, m_q] = [new QueueADT(), new QueueADT()];
 
-            enqueue(name, gender) {
-                (gender === 'm') ? this.m_q.enqueue(name) : this.w_q.enqueue(name);
-            }
+        /**
+         * Add a person to the square dance waiting list.
+         * @param name - The name of the person.
+         * @param gender - The gender shorthand of the person, one of {'m', 'w'}.
+         */
+        function enqueue(name, gender) {
+            (gender === 'm') ? m_q.enqueue(name) : w_q.enqueue(name);
+        }
 
-            /**
-             * Attempts to iterate through and return the freshest pair amongst those currently waiting. Throws an
-             * error if there isn't currently a pair waiting.
-             * @returns {*[]} - A two-item list whose first element is the next woman and second element the next man.
-             */
-            next() {
-                if (this.w_q.empty() || this.m_q.empty()) {
-                    throw Error("No dance pairs currently available. Please try again later.");
-                } else {
-                    return [this.w_q.dequeue(), this.m_q.dequeue()];
-                }
+        /**
+         * Attempts to iterate through and return the freshest pair amongst those currently waiting. Throws an
+         * error if there isn't currently a pair waiting.
+         * @returns {*[]} - A two-item list whose first element is the next woman and second element the next man.
+         */
+        function next() {
+            if (w_q.empty() || m_q.empty()) {
+                throw Error("No dance pairs currently available. Please try again later.");
+            } else {
+                return [w_q.dequeue(), m_q.dequeue()];
             }
         }
 
-        out = new Square();
+        out = {enqueue: enqueue, next: next};
     })();
     return out;
+}
+
+
+/**
+ * Returns the most significant digit from each of the values in the input. Used by radix_sort.
+ * @param values - A list of integer values.
+ * @returns {number} - The length of the most significant integer.
+ * @private
+ */
+function  _sigfig(...values) {
+    const max_sigfigs = values.map(v => v.toString().length).reduce((a, b) => a > b ? a : b);
+    return values.map(v => (v.toString().length === max_sigfigs) ? v.toString()[max_sigfigs] : 0);
+}
+
+
+/**
+ * Implements the radix sort algorithm. See page 67 of the book.
+ * @param values
+ * @returns {QueueADT}
+ */
+function radix_sort(...values) {
+    let q = new QueueADT();
+    if (values.length === 0) { return q; }
+
+    const sigfigs = _sigfig(...values);
+
+    let map = {};
+    values.forEach((v, i) => map.hasOwnProperty(v) ? map[v].push(i) : map[v] = [i]);
+
+    Object.keys(map).forEach(v => {
+        let idxs = values[map[v]];
+        if (idxs.length > 1) {
+            let colliding_entries = idxs.map(idx => Math.floor(values[idx] / 10));
+            let subq = radix_sort(colliding_entries);
+            while (!subq.empty()) { q.enqueue(subq.dequeue()); }
+        } else {
+            q.enqueue(values[map[v][0]]);
+        }
+    });
+    return q;
 }
 
 
 module.exports = {
     convert_base: convert_base,
     palindrome: palindrome,
-    square_dance: square_dance
+    square_dance: square_dance,
+    radix_sort: radix_sort
 };

@@ -17,9 +17,9 @@ class QueueADT {
             throw SyntaxError("Cannot dequeue from a zero-length queue.")
         }
 
-        let out = this.store[this.length - 1];
+        let out = this.store[0];
         this.length -= 1;
-        this.store = this.store.slice(0, this.length - 1);
+        this.store = this.store.slice(1, this.length + 1);
         return out;
     }
 
