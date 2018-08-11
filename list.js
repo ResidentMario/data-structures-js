@@ -19,7 +19,7 @@ class ListADT {
     }
 
     /**
-     * List ADT find operator.
+     * List ADT _get_node operator.
      * @param v - The element to be found.
      */
     find(v) {

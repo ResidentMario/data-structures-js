@@ -83,4 +83,23 @@ describe("LinkedListADT", () => {
 
     });
 
+    describe("find", () => {
+        it("should work when the value is contained in the list", () => {
+            let l = new LinkedListADT();
+            l.append(2);
+            l.append(3);
+            l.append(4);
+            assert.equal(l.find(3), l.head.next);
+        });
+
+        it("should throw when the value is not contained in the list", () => {
+            let l = new LinkedListADT();
+            l.append(2);
+            l.append(3);
+            l.append(4);
+            assert.throws(() => l.find(5), Error);
+        });
+
+    });
+
 });

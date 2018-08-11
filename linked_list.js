@@ -8,7 +8,7 @@ class _Node {
 class LinkedListADT {
 
     /**
-     * Linked List ADT constructor.
+     * Singely linked list ADT constructor.
      * @constructor
      */
     constructor() {
@@ -49,6 +49,24 @@ class LinkedListADT {
     }
 
     /**
+     * Finds and returns the node with the given value.
+     * @param v - The value to be sought out.
+     * @returns {*}
+     */
+    find(v) {
+        let idx = 0;
+        let n = this.head;
+        while (idx <= this.length) {
+            if (n.value === v) {
+                return n;
+            }
+                n = n.next;
+                idx += 1;
+        }
+        throw Error(`The value ${v} is not contained in the list.`)
+    }
+
+    /**
      * Linked list ADT insert operation.
      * @param v - The value to store.
      * @param idx - The index of the linked node to store the value at.
@@ -70,6 +88,20 @@ class LinkedListADT {
         }
         this.length += 1;
 
+    }
+
+    remove(idx) {
+        if (idx > this.length || idx < 0) { throw SyntaxError("Attempting a remove that is out of range."); }
+
+        if (idx === 0) {
+            let n = this.head;
+            this.head = n.next;
+            return n;
+        } else if (idx === this.length - 1) {
+            let n = this._get_node(this.length - 2);
+            this.tail = n;
+            return n;
+        }
     }
 
 }

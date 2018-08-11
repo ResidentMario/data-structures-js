@@ -24,7 +24,7 @@ describe('ListADT', () => {
         });
     });
 
-    describe('find', () => {
+    describe('_get_node', () => {
         it('should return the correct indices for values in the list', () => {
             let l = new ListADT([1, 2, 3]);
             let idx = l.find(3);
