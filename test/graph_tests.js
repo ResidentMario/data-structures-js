@@ -191,4 +191,43 @@ describe("GraphADT", () => {
         });
     });
 
+    describe("topological_sort", () => {
+        it("should work for the trivial single-node case", () => {
+            let g = new GraphADT();
+            g.add_vertex("Foo");
+            assert.deepEqual(g.topological_sort(), [g.nodes['Foo']]);
+        });
+
+        it("should work with a linked list of nodes", () => {
+            let g = new GraphADT();
+            g.add_vertex("Foo");
+            g.add_vertex("Bar");
+            g.add_vertex("Baz");
+            g.add_edge("Foo", "Bar");
+            g.add_edge("Bar", "Baz");
+            assert.deepEqual(g.topological_sort(), [g.nodes['Foo'], g.nodes['Bar'], g.nodes['Baz']]);
+        });
+
+        it("should work with a binary tree of nodes", () => {
+            let g = new GraphADT();
+            g.add_vertex("Foo");
+            g.add_vertex("Bar");
+            g.add_vertex("Baz");
+            g.add_edge("Foo", "Bar");
+            g.add_edge("Foo", "Baz");
+            assert.deepEqual(g.topological_sort(), [g.nodes["Foo"], g.nodes["Baz"], g.nodes["Bar"]]);
+        });
+
+        it("should work with cyclic graphs", () => {
+            let g = new GraphADT();
+            g.add_vertex("Foo");
+            g.add_vertex("Bar");
+            g.add_vertex("Baz");
+            g.add_edge("Foo", "Bar");
+            g.add_edge("Bar", "Baz");
+            g.add_edge("Baz", "Foo");
+            assert.deepEqual(g.topological_sort(), [g.nodes['Foo'], g.nodes['Bar'], g.nodes['Baz']]);
+        });
+    });
+
 });

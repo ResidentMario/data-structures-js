@@ -107,6 +107,35 @@ class GraphADT {
         throw Error("The target node was not found in the graph.")
     }
 
+    /**
+     * Performs a topological sort. The Graph class is undirected, but is implicitly treated as directed by
+     * this algorithm. In other words, this topological sort essentially builds a directed minimum spanning tree on
+     * the graph.
+     * @returns {Array} - A list of nodes in topological prefix order.
+     */
+    topological_sort() {
+        let head = this.nodes[Object.keys(this.nodes)[0]];
+        let L = [];
+        let perma_marks = new Set();
+        let temp_marks = new Set();
+
+        function visit(n) {
+            if (!perma_marks.has(n.name)) {
+                temp_marks.add(n.name);
+                for (let adj of n.adj) {
+                    if (!temp_marks.has(adj.name)) {
+                        visit(adj);
+                    }
+                }
+                perma_marks.add(n.name);
+                L.push(n);
+            }
+        }
+
+        visit(head);
+        return L.reverse();
+    }
+
 }
 
 module.exports = {
