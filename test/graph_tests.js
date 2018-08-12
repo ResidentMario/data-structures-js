@@ -153,4 +153,42 @@ describe("GraphADT", () => {
 
     });
 
+    describe("shortest_path", () => {
+        it("should work for the trivial self-invocation case", () => {
+            let g = new GraphADT();
+            g.add_vertex("Foo");
+
+            assert.deepEqual(g.shortest_path(g.nodes['Foo'], g.nodes['Foo']), [])
+        });
+
+        it("should work for the simple adjacent case", () => {
+            let g = new GraphADT();
+            g.add_vertex("Foo");
+            g.add_vertex("Bar");
+            g.add_vertex("Baz");
+            g.add_edge("Foo", "Bar");
+            g.add_edge("Bar", "Baz");
+
+            assert.deepEqual(g.shortest_path(g.nodes['Foo'], g.nodes['Bar']), [g.nodes['Foo'], g.nodes['Bar']])
+        });
+
+        it("should throw if the target node is not contained in the graph", () => {
+            let g = new GraphADT();
+            g.add_vertex("Foo");
+            assert.throws(() => g.shortest_path(g.nodes['Foo'], g.nodes['Baz']), Error)
+        });
+
+        it("should work for non-adjacent cases", () => {
+            let g = new GraphADT();
+            g.add_vertex("Foo");
+            g.add_vertex("Bar");
+            g.add_vertex("Baz");
+            g.add_edge("Foo", "Bar");
+            g.add_edge("Bar", "Baz");
+
+            assert.deepEqual(g.shortest_path(g.nodes['Foo'], g.nodes['Baz']),
+                [g.nodes['Foo'], g.nodes['Bar'], g.nodes['Baz']])
+        });
+    });
+
 });

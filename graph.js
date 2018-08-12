@@ -2,7 +2,7 @@ class _Node {
     constructor(name) { this.name = name; this.adj = []; }
 }
 
-// Graph.
+// Graph data structure. Note: uses raw nodes as inputs, not names.
 class GraphADT {
     constructor() { this.nodes = {}; }
 
@@ -68,12 +68,43 @@ class GraphADT {
         while (todo.size !== 0) {
             for (let n of todo) {
                 seen.add(n);
-                next_todo = new Set([...next_todo, ...next_nodes(n, seen=seen)]);
+                next_todo = new Set([...next_todo, ...next_nodes(n, seen)]);
                 yield n;
             }
             todo = next_todo;
             next_todo = new Set();
         }
+    }
+
+    shortest_path(start, target) {
+        if (start.name === target.name) { return []; }
+
+        function next_nodes(start, seen) { return start.adj.filter(v => !seen.has(v)); }
+
+        let todo = new Set([start]);
+        let next_todo = new Set();
+        let seen = new Set();
+        let paths = {}; paths[start.name] = [start];
+
+        while (todo.size !== 0) {
+            for (let node of todo) {
+                let next_nodeset = next_nodes(node, seen);
+                for (let next_node of next_nodeset) {
+                    const path = [...paths[node.name], next_node];
+                    if (next_node.name === target.name) {
+                        return path;
+                    } else {
+                        paths[next_node.name] = path;
+                        next_todo.add(next_node);
+                    }
+                }
+                seen.add(node);
+            }
+            todo = next_todo;
+            next_todo = new Set();
+        }
+
+        throw Error("The target node was not found in the graph.")
     }
 
 }
