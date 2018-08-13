@@ -3,6 +3,7 @@ const palindrome = require("../toys").palindrome;
 const square_dance = require("../toys").square_dance;
 const radix_sort = require("../toys").radix_sort;
 const priority_queue = require('../toys').priority_queue;
+const longest_common_substring_brute_force = require('../toys').longest_common_substring_brute_force;
 const assert = require('assert');
 
 
@@ -125,5 +126,24 @@ describe("priority_queue", () => {
         q.enqueue('bar', 1);
         assert.equal(q.dequeue(), 'foo');
         assert.equal(q.dequeue(), 'bar');
+    });
+});
+
+
+describe("longest_common_substring_brute_force", () => {
+    it("works in the trivial case", () => {
+        assert.equal(longest_common_substring_brute_force('A', 'A'), 'A');
+    });
+
+    it("works in the lengthy full-match case", () => {
+        assert.equal(longest_common_substring_brute_force('AAAA', 'AAAA'), 'AAAA');
+    });
+
+    it("works in partial cases", () => {
+        assert.equal(longest_common_substring_brute_force('ABBA', 'ABAB'), 'AB');
+    });
+
+    it("works on matches in later parts of the string", () => {
+        assert.equal(longest_common_substring_brute_force('ABBA', 'CBBC'), 'BB');
     });
 });

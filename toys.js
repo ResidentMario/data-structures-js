@@ -153,10 +153,107 @@ function priority_queue() {
 }
 
 
+function longest_common_substring_brute_force(a, b) {
+    let curr_seq = "";
+    let memo = {};
+
+    function match_length(a_idx, b_idx) {
+        let len = 0;
+        while((a.charAt(a_idx) === b.charAt(b_idx)) && ((a_idx < a.length) && (b_idx < b.length))) {
+            a_idx += 1; b_idx += 1; len += 1;
+        }
+        return len;
+    }
+
+    function check(a_idx, b_idx) {
+        let len = 0;
+        if (memo.hasOwnProperty(a_idx) && memo.hasOwnProperty(b_idx)) {
+            len = memo[a_idx][b_idx];
+            return len;
+        } else {
+            len = match_length(a_idx, b_idx);
+            for (let sublen of Object.keys([...Array(len)])) { sublen = parseInt(sublen); }
+        }
+        return len;
+    }
+
+    let [longest_a_idx, longest_b_idx, longest_len] = [null, null, 0];
+    for (let a_idx of Object.keys([...Array(a.length)])) {
+        for (let b_idx of Object.keys([...Array(b.length)])) {
+            [a_idx, b_idx] = [parseInt(a_idx), parseInt(b_idx)];
+            let new_len = check(a_idx, b_idx);
+            if (new_len > longest_len) {
+                longest_len = new_len;
+                longest_a_idx = a_idx;
+                longest_b_idx = b_idx;
+            }
+        }
+    }
+
+    return a.slice(longest_a_idx, longest_a_idx + longest_len);
+}
+
+// // TODO: verify that the given brute-force solution works, and that it continues to work with the memoization added.
+// function longest_common_substring_brute_force(a, b) {
+//     let curr_seq = "";
+//     let memo = {};
+//
+//     function match_length(a_idx, b_idx) {
+//         let len = 0;
+//         while((a.charAt(a_idx) === b.charAt(b_idx)) && ((a_idx < a.length) && (b_idx < b.length))) {
+//             a_idx += 1; b_idx += 1; len += 1;
+//
+//             if (memo.hasOwnProperty(a_idx) && memo[a_idx][b_idx] !== undefined) {
+//                 len += memo[a_idx][b_idx];
+//                 return len;
+//             }
+//         }
+//         return len;
+//     }
+//
+//     function check(a_idx, b_idx) {
+//         let len = 0;
+//         if (memo.hasOwnProperty(a_idx) && memo.hasOwnProperty(b_idx)) {
+//             len = memo[a_idx][b_idx];
+//             return len;
+//         } else {
+//             len = match_length(a_idx, b_idx);
+//             for (let sublen of Object.keys([...Array(len)])) {
+//                 sublen = parseInt(sublen);
+//                 if (memo.hasOwnProperty(a_idx + sublen)) {
+//                     memo[a_idx + sublen][b_idx + sublen] = sublen;
+//                 } else {
+//                     memo[a_idx + sublen] = {};
+//                     memo[a_idx + sublen][b_idx + sublen] = len;
+//                 }
+//             }
+//         }
+//         return len;
+//     }
+//
+//     let [longest_a_idx, longest_b_idx, longest_len] = [null, null, 0];
+//     for (let a_idx of Object.keys([...Array(a.length)])) {
+//         for (let b_idx of Object.keys([...Array(b.length)])) {
+//             [a_idx, b_idx] = [parseInt(a_idx), parseInt(b_idx)];
+//             let new_len = check(a_idx, b_idx);
+//             if (new_len > longest_len) {
+//                 longest_len = new_len;
+//                 longest_a_idx = a_idx;
+//                 longest_b_idx = b_idx;
+//             }
+//         }
+//     }
+//
+//     console.log(memo);
+//     return a.slice(longest_a_idx, longest_a_idx + longest_len);
+// }
+
+
 module.exports = {
     convert_base: convert_base,
     palindrome: palindrome,
     square_dance: square_dance,
     radix_sort: radix_sort,
-    priority_queue: priority_queue
+    priority_queue: priority_queue,
+    longest_common_substring_brute_force: longest_common_substring_brute_force
 };
