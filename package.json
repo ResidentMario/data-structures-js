@@ -6,7 +6,9 @@
   "directories": {
     "test": "test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "js-combinatorics": "^0.5.3"
+  },
   "devDependencies": {
     "mocha": "^5.2.0"
   },
